@@ -1,0 +1,39 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java CI with Maven
+
+env:
+  java: 11
+
+on:
+  push:
+    branches: [ development, master ]
+  pull_request:
+    branches: [ development ]
+
+jobs:
+  test:
+    name: mvn verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Commit external visits API spec to development
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && hashFiles(first.txt) != hashFiles(second.txt)
+        run: |
+          token=${{ secrets.SORMAS_TOKEN }}
+          bot_name=JonasCir
+
+          REPO_REF="https://${bot_name}:${token}@github.com/${GITHUB_REPOSITORY}.git"
+          git config user.name "${bot_name}"
+          git config user.email "20031875+JonasCir@users.noreply.github.com"
+          git remote add upstream "${REPO_REF}"
+
+          echo "hello world" > test.txt
+
+          git add test.txt
+          git commit -m "[GitHub Actions] Update external visits API spec files"
+          git push upstream development
