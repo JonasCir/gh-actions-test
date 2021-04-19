@@ -34,4 +34,4 @@ jobs:
 
           git add test.txt
           git commit -m "[GitHub Actions] Update external visits API spec files"
-          git push upstream development
+          git push upstream main
